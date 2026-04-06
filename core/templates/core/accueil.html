@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeAvecAbel — Formation Django</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0E14;
+    --surface: #111820;
+    --surface2: #161E28;
+    --green: #00E676;
+    --green-dim: #00C853;
+    --blue: #2196F3;
+    --orange: #FF6D00;
+    --white: #F0F6FF;
+    --gray: #6B7A8D;
+    --gray2: #2A3444;
+    --border: rgba(0,230,118,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BG ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,230,118,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,230,118,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,14,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    color: var(--green);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--green);
+    color: var(--bg) !important;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 2rem 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,230,118,0.08);
+    border: 1px solid rgba(0,230,118,0.25);
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+  }
+
+  .hero-title span {
+    color: var(--green);
+    display: block;
+  }
+
+  .hero-desc {
+    color: var(--gray);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--bg);
+    padding: 14px 28px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 14px 28px;
+    border-radius: 4px;
+    border: 1px solid var(--gray2);
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--green); transform: translateY(-1px); }
+
+  /* ── HERO CARD ── */
+  .hero-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--blue));
+  }
+
+  .profile-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray2);
+  }
+
+  .avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .profile-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .profile-info p {
+    font-size: 12px;
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-stat {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .card-stat-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+    display: block;
+  }
+
+  .card-stat-label {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 2px;
+  }
+
+  .tech-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--surface2);
+    border: 1px solid var(--gray2);
+    color: var(--gray);
+  }
+
+  .badge.green { border-color: rgba(0,230,118,0.3); color: var(--green); }
+  .badge.blue { border-color: rgba(33,150,243,0.3); color: var(--blue); }
+  .badge.orange { border-color: rgba(255,109,0,0.3); color: var(--orange); }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 100px 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--green);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  .about-text p {
+    color: var(--gray);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .about-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .highlight-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--gray2);
+    border-radius: 8px;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+
+  .highlight-item:hover { border-color: rgba(0,230,118,0.3); }
+
+  .highlight-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: rgba(0,230,118,0.08);
+  }
+
+  .highlight-icon.blue-bg { background: rgba(33,150,243,0.08); }
+  .highlight-icon.orange-bg { background: rgba(255,109,0,0.08); }
+
+  .highlight-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .highlight-info p { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+  /* ── FORMATION ── */
+  .formation {
+    padding: 100px 2rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .formation-inner { max-width: 1100px; margin: 0 auto; }
+
+  .formation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .phases-nav {
+    display: flex;
+    gap: 8px;
+  }
+
+  .phase-pill {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--gray2);
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Space Mono', monospace;
+    background: transparent;
+  }
+
+  .phase-pill.active-green { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.06); }
+  .phase-pill.active-blue { border-color: var(--blue); color: var(--blue); background: rgba(33,150,243,0.06); }
+  .phase-pill.active-orange { border-color: var(--orange); color: var(--orange); background: rgba(255,109,0,0.06); }
+
+  /* ── VIDEO CARDS ── */
+  .videos-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .video-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--gray2);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    transition: border-color 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+
+  .video-row:hover {
+    border-color: rgba(0,230,118,0.3);
+    transform: translateX(4px);
+  }
+
+  .video-row.phase2:hover { border-color: rgba(33,150,243,0.3); }
+  .video-row.phase3:hover { border-color: rgba(255,109,0,0.3); }
+
+  .vid-num-box {
+    text-align: center;
+  }
+
+  .vid-num-box .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    display: block;
+  }
+
+  .vid-num-box .phase-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin: 4px auto 0;
+  }
+
+  .green-col .num { color: var(--green); }
+  .green-col .phase-dot { background: var(--green); }
+  .blue-col .num { color: var(--blue); }
+  .blue-col .phase-dot { background: var(--blue); }
+  .orange-col .num { color: var(--orange); }
+  .orange-col .phase-dot { background: var(--orange); }
+
+  .vid-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .vid-content p {
+    font-size: 12px;
+    color: var(--gray);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .vid-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .yt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,0,0,0.08);
+    border: 1px solid rgba(255,0,0,0.2);
+    color: #FF4444;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .yt-btn:hover { background: rgba(255,0,0,0.15); }
+
+  .dl-btn2 {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,230,118,0.06);
+    border: 1px solid rgba(0,230,118,0.2);
+    color: var(--green);
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .dl-btn2:hover { background: rgba(0,230,118,0.12); }
+
+  .coming-tag {
+    font-size: 11px;
+    color: var(--gray);
+    font-family: 'Space Mono', monospace;
+    padding: 6px 12px;
+    border: 1px dashed var(--gray2);
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ── PHASE SEPARATORS ── */
+  .phase-separator {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .phase-separator span {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    padding: 4px 12px;
+    border-radius: 3px;
+  }
+
+  .phase-separator .line {
+    flex: 1;
+    height: 1px;
+  }
+
+  .sep-green span { color: var(--green); background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); }
+  .sep-green .line { background: rgba(0,230,118,0.15); }
+  .sep-blue span { color: var(--blue); background: rgba(33,150,243,0.08); border: 1px solid rgba(33,150,243,0.2); }
+  .sep-blue .line { background: rgba(33,150,243,0.15); }
+  .sep-orange span { color: var(--orange); background: rgba(255,109,0,0.08); border: 1px solid rgba(255,109,0,0.2); }
+  .sep-orange .line { background: rgba(255,109,0,0.15); }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 100px 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+  }
+
+  .cta-section p {
+    color: var(--gray);
+    font-size: 15px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--gray2);
+    padding: 2rem;
+    text-align: center;
+    color: var(--gray);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer a { color: var(--green); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.6s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.2s; }
+  .fade-in:nth-child(3) { animation-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .formation-header { flex-direction: column; align-items: flex-start; }
+    .video-row { grid-template-columns: 48px 1fr; }
+    .vid-actions { grid-column: 1 / -1; }
+    .nav-links { display: none; }
+    .phases-nav { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">CodeAvecAbel</a>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#formation">Formation</a></li>
+    <li><a href="https://youtube.com/@CodeAvecAbel" target="_blank" class="nav-cta">YouTube ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="fade-in">
+        <div class="hero-tag">Formation Django 2026</div>
+        <h1 class="hero-title">
+          Apprends à créer
+          <span>des vrais sites web</span>
+          avec Python.
+        </h1>
+        <p class="hero-desc">
+          Une formation complète, gratuite, sur Django.<br>
+          De zéro à un portfolio professionnel en ligne.
+        </p>
+        <div class="hero-actions">
+          <a href="#formation" class="btn-primary">Voir la formation →</a>
+          <a href="https://youtube.com/@CodeAvecAbel" target="_blank" class="btn-secondary">▶ YouTube</a>
+        </div>
+      </div>
+
+      <div class="hero-card fade-in">
+        <div class="profile-row"
+          <div class="avatar">AK</div>
+          <div class="profile-info">
+            <h3>Abel KPOKOUTA</h3>
+            <p>// étudiant ingénieur & dev</p>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="card-stat">
+            <span class="card-stat-val">13</span>
+            <span class="card-stat-label">Vidéos</span>
+          </div>
+          <div class="card-stat">
+            <span class="card-stat-val">30min</span>
+            <span class="card-stat-label">Par vidéo</span>
+          </div>
+          <div class="card-stat">
+            <span class="card-stat-val">100%</span>
+            <span class="card-stat-label">Gratuit</span>
+          </div>
+          <div class="card-stat">
+            <span class="card-stat-val">1</span>
+            <span class="card-stat-label">Projet réel</span>
+          </div>
+        </div>
+        <div class="tech-badges">
+          <span class="badge green">Python</span>
+          <span class="badge green">Django</span>
+          <span class="badge blue">HTML/CSS</span>
+          <span class="badge orange">Déploiement</span>
+          <span class="badge">SQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about">
+    <div class="section-label">À propos</div>
+    <h2 class="section-title">Qui suis-je ?</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Je suis <strong>Abel KPOKOUTA</strong> — étudiant ingénieur en génie mathématique, développeur, et créateur de contenu sur YouTube.</p>
+        <p>Ma mission sur <strong>CodeAvecAbel</strong> : t'aider à coder plus intelligemment en combinant les maths, la modélisation et l'IA.</p>
+        <p>Je crois qu'on apprend mieux en construisant des <strong>vrais projets</strong> — pas des exercices théoriques. C'est pour ça que cette formation Django aboutit à un portfolio professionnel réel, en ligne.</p>
+        <a href="https://youtube.com/@CodeAvecAbel" target="_blank" class="btn-primary" style="margin-top: 1rem; display: inline-flex;">Rejoindre la chaîne →</a>
+      </div>
+      <div class="about-highlights">
+        <div class="highlight-item">
+          <div class="highlight-icon">🎓</div>
+          <div class="highlight-info">
+            <h4>Étudiant Ingénieur</h4>
+            <p>Génie mathématique — j'explique les concepts avec rigueur et clarté.</p>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon blue-bg">💻</div>
+          <div class="highlight-info">
+            <h4>Développeur Python</h4>
+            <p>Python, Django, data science, automatisation — c'est mon quotidien.</p>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon orange-bg">🎬</div>
+          <div class="highlight-info">
+            <h4>Créateur de contenu</h4>
+            <p>Des vidéos claires, concrètes et accessibles — même en partant de zéro.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMATION -->
+<section id="formation">
+  <div class="formation">
+    <div class="formation-inner">
+      <div class="formation-header">
+        <div>
+          <div class="section-label">Programme complet</div>
+          <h2 class="section-title">Les 13 vidéos</h2>
+        </div>
+      </div>
+
+      <div class="videos-grid">
+
+        <!-- PHASE 1 -->
+        <div class="phase-separator sep-green">
+          <span>PHASE 1 — PRÉREQUIS</span>
+          <div class="line"></div>
+        </div>
+
+        <a class="video-row" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box green-col">
+            <span class="num">01</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Installation & Configuration</h3>
+            <p>Python · VSCode · pip · environnement virtuel · Django</p>
+          </div>
+          <div class="vid-actions">
+            <a href="https://youtube.com/@CodeAvecAbel" target="_blank" class="yt-btn">▶ Voir</a>
+            <a href="script_video1_installation.md" class="dl-btn2">↓ Script</a>
+          </div>
+        </a>
+
+        <a class="video-row" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box green-col">
+            <span class="num">02</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Les Bases Python</h3>
+            <p>Variables · fonctions · boucles · conditions · listes · dicos</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box green-col">
+            <span class="num">03</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>La POO en Python</h3>
+            <p>Classes · objets · héritage — indispensable pour Django</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box green-col">
+            <span class="num">04</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>HTML & CSS</h3>
+            <p>Structure HTML · CSS · Flexbox — le minimum vital</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <!-- PHASE 2 -->
+        <div class="phase-separator sep-blue">
+          <span>PHASE 2 — DJANGO</span>
+          <div class="line"></div>
+        </div>
+
+        <a class="video-row phase2" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box blue-col">
+            <span class="num">05</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Django — Introduction</h3>
+            <p>Architecture MVT · premier projet · premier serveur</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase2" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box blue-col">
+            <span class="num">06</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>URLs, Vues & Templates</h3>
+            <p>Routing · vues · templates · affichage dynamique</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase2" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box blue-col">
+            <span class="num">07</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Modèles & Base de données</h3>
+            <p>Modèles Django · migrations · requêtes SQL</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase2" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box blue-col">
+            <span class="num">08</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>L'Admin Django</h3>
+            <p>Panneau admin · gestion du contenu sans code</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <!-- PHASE 3 -->
+        <div class="phase-separator sep-orange">
+          <span>PHASE 3 — LE PROJET</span>
+          <div class="line"></div>
+        </div>
+
+        <a class="video-row phase3" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box orange-col">
+            <span class="num">09</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Section Projets Dynamique</h3>
+            <p>Afficher les projets depuis la BDD · admin dynamique</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase3" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box orange-col">
+            <span class="num">10</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Le Blog</h3>
+            <p>Modèle article · liste · détail · gestion admin</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase3" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box orange-col">
+            <span class="num">11</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Formulaire de Contact</h3>
+            <p>Formulaire Django · validation · envoi email</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase3" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box orange-col">
+            <span class="num">12</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Authentification & Sécurité</h3>
+            <p>Login · logout · protection des pages · permissions</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+        <a class="video-row phase3" href="https://youtube.com/@CodeAvecAbel" target="_blank">
+          <div class="vid-num-box orange-col">
+            <span class="num">13</span>
+            <div class="phase-dot"></div>
+          </div>
+          <div class="vid-content">
+            <h3>Déploiement en Ligne 🌍</h3>
+            <p>Railway · Render · production · ton site accessible partout</p>
+          </div>
+          <div class="vid-actions">
+            <span class="coming-tag">Bientôt</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="cta-section">
+    <div class="section-label" style="justify-content: center;">Rejoins la formation</div>
+    <h2>Prêt à commencer ?</h2>
+    <p>Abonne-toi à la chaîne, active la cloche, et rejoins la communauté qui apprend Django de A à Z — gratuitement.</p>
+    <div class="cta-actions">
+      <a href="https://youtube.com/@CodeAvecAbel" target="_blank" class="btn-primary">▶ Aller sur YouTube</a>
+      <a href="#formation" class="btn-secondary">Voir le programme</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Fait avec ❤️ par <a href="https://youtube.com/@CodeAvecAbel" target="_blank">CodeAvecAbel</a> · Formation Django 100% gratuite</p>
+</footer>
+
+</body>
+</html>
